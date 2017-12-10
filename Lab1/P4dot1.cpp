@@ -7,7 +7,7 @@
 #include "P4dot1.h"
 
 namespace P4dot1 {
-	int *prefixAverages1(int X[n])
+	int* prefixAverages1(int X[n])
 	{
 		int A[n];
 
@@ -21,10 +21,10 @@ namespace P4dot1 {
 			A[i] = a / (i + 1);
 		}
 
-		return &A[0];
+		return A;
 	}
 
-	int *prefixAverages2(int X[n])
+	int* prefixAverages2(int X[n])
 	{
 		int A[n];
 		int s = 0;
@@ -35,7 +35,7 @@ namespace P4dot1 {
 			A[i] = s / (i + 1);
 		}
 
-		return &A[0];
+		return A;
 	}
 
 	void run() {

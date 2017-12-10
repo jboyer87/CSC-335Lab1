@@ -25,11 +25,11 @@ namespace P4dot1 {
 	// 1: 11.2878
 	// 2: .0145005
 
-	const int n = 2000;
+	const int n = 800;
 
-	int *prefixAverages1(int X[n]);
+	int* prefixAverages1(int X[n]);
 
-	int *prefixAverages2(int X[n]);
+	int* prefixAverages2(int X[n]);
 
 	void run();
 }
