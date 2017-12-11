@@ -1,221 +1,171 @@
-#include <string>
-#include <exception>
-#include <stdexcept>
-#include <iostream>
 #include "P3dot2.h"
+#include <iostream>
+#include <iomanip>
 
 namespace P3dot2 {
-	GameEntry::GameEntry(const std::string& name, int score)
+
+	Matrix::Matrix()
 	{
-		m_name = name;
-		m_score = score;
+		m_columns = 3;
+		m_rows = 3;
+
+		// Initialize the data
+		this->initializeMatrixData();
 	}
 
-	std::string GameEntry::getName() const
+	Matrix::Matrix(int columns, int rows)
 	{
-		return m_name;
+		m_columns = columns;
+		m_rows = rows;
+
+		this->initializeMatrixData();
 	}
 
-	void GameEntry::setName(std::string name)
+	Matrix::~Matrix()
 	{
-		m_name = name;
-	}
-
-	int GameEntry::getScore() const
-	{
-		return m_score;
-	}
-
-	void GameEntry::setScore(int score)
-	{
-		m_score = score;
-	}
-
-	Scores::Scores(int maxEntries)
-	{
-		m_maxEntries = maxEntries; // save the max size
-		m_entries = new GameEntry[maxEntries]; // allocate array storage
-		m_numEntries = 0; // initially no elements
-
-		for (int i = 0; i < m_maxEntries; i++)
+		if (m_data != nullptr)
 		{
-			m_entries[i] = GameEntry("", 0);
+			// Delete each sub array
+			for (int i = 0; i < m_rows; ++i) 
+			{
+				delete[] m_data[i];
+			}
+			
+			// Then delete the main data object pointer 
+			delete[] m_data;
 		}
 	}
 
-	Scores::~Scores()
+	void Matrix::initializeMatrixData()
 	{
-		delete[] m_entries;
+		m_data = new int*[m_rows];
+
+		for (int i = 0; i < m_rows; i++)
+		{
+			m_data[i] = new int[m_columns];
+		}
+
+		for (int rows = 0; rows < m_rows; rows++)
+		{
+			for (int columns = 0; columns < m_columns; columns++)
+			{
+				m_data[rows][columns] = 0;
+			}
+		}
 	}
 
-	void Scores::add(const GameEntry& entry)
+	void Matrix::load()
 	{
-		if (m_numEntries < m_maxEntries)
+		std::cout << "Enter the matrix values one by one: ";
+
+		for (int rows = 0; rows < m_rows; rows++)
 		{
-			m_entries[m_numEntries] = entry;
-			m_numEntries++;
-		}
-		else
-		{
-			throw std::out_of_range("The entry list is full");
+			for (int columns = 0; columns < m_columns; columns++)
+			{
+				std::cin >> m_data[rows][columns];
+			}
 		}
 	}
 
-	GameEntry Scores::remove(int index)
+	void Matrix::display()
 	{
-		if (index < 0 || index > m_numEntries)
+		for (int i = 0; i <= m_rows - 1; i++)
 		{
-			throw(std::out_of_range("The index entered is out of range!"));
+			for (int j = 0; j <= m_columns - 1; j++)
+			{
+				if (j == 0)
+				{
+					std::cout << "[";
+				}
+
+				std::cout << std::setw(2) << this->m_data[i][j];
+
+				if (j == m_columns - 1)
+				{
+					std::cout << "]" << std::endl;
+				}
+				else
+				{
+					std::cout << ", ";
+				}
+			}
 		}
-
-		// Store the values temporarily so we can return them
-		std::string nameFromDeleted = m_entries[index].getName();
-		int scoreFromDeleted = m_entries[index].getScore();
-
-		// Swap this entry with the last entry
-		m_entries[index].setName(m_entries[m_maxEntries - 1].getName());
-		m_entries[index].setScore(m_entries[m_maxEntries - 1].getScore());
-
-		// Blank out the last entry
-		m_entries[m_maxEntries - 1].setName("");
-		m_entries[m_maxEntries - 1].setScore(0);
-
-		// Return a copy of what we just deleted
-		return GameEntry(nameFromDeleted, scoreFromDeleted);
 	}
 
-	void run() {
-
-		Scores scoreboard = Scores(10);
-
-		GameEntry game1 = GameEntry("Jamie", 10000);
-		GameEntry game2 = GameEntry("Jamie", 20000);
-		GameEntry game3 = GameEntry("Jamie", 30000);
-		GameEntry game4 = GameEntry("Jamie", 40000);
-		GameEntry game5 = GameEntry("Jamie", 50000);
-		GameEntry game6 = GameEntry("Jamie", 60000);
-		GameEntry game7 = GameEntry("Jamie", 70000);
-		GameEntry game8 = GameEntry("Jamie", 80000);
-		GameEntry game9 = GameEntry("Jamie", 90000);
-		GameEntry game10 = GameEntry("Jamie", 100000);
-		GameEntry game11 = GameEntry("Jamie", 110000);
-
-		try
+	Matrix Matrix::operator+(const Matrix &inputMatrix)
+	{
+		// Make sure they are the same size and throw an exception if not
+		if (m_rows != inputMatrix.m_rows || m_columns != inputMatrix.m_columns)
 		{
-			scoreboard.add(game1);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
+			throw std::invalid_argument("The number of rows and columns between matrix objects must be equal.");
 		}
 
-		try
+		Matrix matrixToReturn(this->m_rows, this->m_columns);
+
+		for (int rows = 0; rows < m_rows; rows++)
 		{
-			scoreboard.add(game2);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
+			for (int columns = 0; columns < m_columns; columns++)
+			{
+				// Add the two integers and stuff it into the matrix at the correct position
+				matrixToReturn.m_data[rows][columns] = (this->m_data[rows][columns] + inputMatrix.m_data[rows][columns]);
+			}
 		}
 
-		try
+		return matrixToReturn;
+	}
+
+	Matrix Matrix::operator*(const Matrix &inputMatrix)
+	{
+		// Make sure they are able to be multiplied and throw an exception if not
+		if (m_columns != inputMatrix.m_rows)
 		{
-			scoreboard.add(game3);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
+			throw std::invalid_argument("The number of columns in the first matrix must match the number of rows in the second matrix.");
 		}
 
-		try
+		Matrix matrixToReturn(inputMatrix.m_columns, this->m_rows);
+
+		for (int rows = 0; rows < this->m_rows; rows++)
 		{
-			scoreboard.add(game4);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
+			for (int columns = 0; columns < inputMatrix.m_columns; columns++)
+			{
+				int sum = 0;
+
+				for (int k = 0; k < inputMatrix.m_rows; k++)
+				{
+					int value1 = this->m_data[rows][k];
+					int value2 = inputMatrix.m_data[k][columns];
+
+					sum += value1 * value2;
+				}
+
+				matrixToReturn.m_data[rows][columns] = sum;
+			}
 		}
 
-		try
-		{
-			scoreboard.add(game5);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		return matrixToReturn;
+	}
 
-		try
-		{
-			scoreboard.add(game6);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+	void run() 
+	{
+		Matrix test1 = Matrix();
+		Matrix test2 = Matrix(3, 3);
 
-		try
-		{
-			scoreboard.add(game7);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		Matrix test3 = Matrix(4, 5);
 
-		try
-		{
-			scoreboard.add(game8);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		test1.load();
 
-		try
-		{
-			scoreboard.add(game9);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		test2.load();
 
-		try
-		{
-			scoreboard.add(game10);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		Matrix sum = test1 + test2;
 
-		try
-		{
-			scoreboard.add(game11);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		sum.display();
+		
+		std::cout << std::endl;
+		
+		Matrix product = test1 * test2;
 
-		try
-		{
-			GameEntry toRemove = scoreboard.remove(0);
-			std::cout << toRemove.getName() << " " << toRemove.getScore() << " removed." << std::endl << std::endl;
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
-
-		try
-		{
-			scoreboard.remove(0);
-		}
-		catch (std::out_of_range exception)
-		{
-			std::cout << exception.what() << std::endl << std::endl;
-		}
+		product.display();
+		
+		std::cout << std::endl;
 	}
 }

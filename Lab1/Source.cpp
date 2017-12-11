@@ -2,6 +2,7 @@
 #include "P1dot1.h"
 #include "C2dot4.h"
 #include "P3dot2.h"
+#include "P3dot3.h"
 #include "P4dot1.h"
 
 int main() {
@@ -17,6 +18,11 @@ int main() {
 
 	std::cout << "P3.2: " << std::endl;
 	P3dot2::run();
+
+	std::cout << std::endl << std::endl;
+
+	std::cout << "P3.3: " << std::endl;
+	P3dot3::run();
 
 	std::cout << std::endl << std::endl;
 

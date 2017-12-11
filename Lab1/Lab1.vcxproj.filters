@@ -24,10 +24,13 @@
     <ClCompile Include="C2dot4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="P3dot2.cpp">
+    <ClCompile Include="P4dot1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="P4dot1.cpp">
+    <ClCompile Include="P3dot3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="P3dot2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +41,13 @@
     <ClInclude Include="C2dot4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="P3dot2.h">
+    <ClInclude Include="P4dot1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="P4dot1.h">
+    <ClInclude Include="P3dot3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="P3dot2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
