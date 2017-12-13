@@ -21,35 +21,51 @@ namespace P3dot2 {
 		this->initializeMatrixData();
 	}
 
+
 	Matrix::~Matrix()
 	{
-		if (m_data != nullptr)
+		for (int i = 0; i < m_rows; i++)
 		{
-			// Delete each sub array
-			for (int i = 0; i < m_rows; ++i) 
+			delete[] m_data[i];
+		}
+
+		delete[] m_data;
+	}
+
+	Matrix::Matrix(const Matrix &right)
+	{
+		m_rows = right.m_rows;
+		m_columns = right.m_columns;
+
+		m_data = new int*[m_rows];
+
+		for (int i = 0; i < m_rows; i++)
+			m_data[i] = new int[m_columns];
+
+		for (int i = 0; i < m_rows; i++)
+		{
+			for (int j = 0; j < m_columns; j++)
 			{
-				delete[] m_data[i];
+				m_data[i][j] = right.m_data[i][j];
 			}
-			
-			// Then delete the main data object pointer 
-			delete[] m_data;
 		}
 	}
 
 	void Matrix::initializeMatrixData()
 	{
+
 		m_data = new int*[m_rows];
 
-		for (int i = 0; i < m_rows; i++)
+		for (int i = 0; i < m_rows; ++i)
 		{
 			m_data[i] = new int[m_columns];
 		}
 
-		for (int rows = 0; rows < m_rows; rows++)
+		for (int i = 0; i < m_rows; ++i)
 		{
-			for (int columns = 0; columns < m_columns; columns++)
+			for (int j = 0; j < m_columns; ++j)
 			{
-				m_data[rows][columns] = 0;
+				m_data[i][j] = 0;
 			}
 		}
 	}
@@ -67,7 +83,7 @@ namespace P3dot2 {
 		}
 	}
 
-	void Matrix::display()
+	void const Matrix::display()
 	{
 		for (int i = 0; i <= m_rows - 1; i++)
 		{
@@ -78,7 +94,7 @@ namespace P3dot2 {
 					std::cout << "[";
 				}
 
-				std::cout << std::setw(2) << this->m_data[i][j];
+				std::cout << std::setw(2) << m_data[i][j];
 
 				if (j == m_columns - 1)
 				{
@@ -100,14 +116,14 @@ namespace P3dot2 {
 			throw std::invalid_argument("The number of rows and columns between matrix objects must be equal.");
 		}
 
-		Matrix matrixToReturn(this->m_rows, this->m_columns);
+		Matrix matrixToReturn(m_rows, m_columns);
 
 		for (int rows = 0; rows < m_rows; rows++)
 		{
 			for (int columns = 0; columns < m_columns; columns++)
 			{
 				// Add the two integers and stuff it into the matrix at the correct position
-				matrixToReturn.m_data[rows][columns] = (this->m_data[rows][columns] + inputMatrix.m_data[rows][columns]);
+				matrixToReturn.m_data[rows][columns] = (m_data[rows][columns] + inputMatrix.m_data[rows][columns]);
 			}
 		}
 
@@ -145,7 +161,7 @@ namespace P3dot2 {
 		return matrixToReturn;
 	}
 
-	void run() 
+	void run()
 	{
 		Matrix test1 = Matrix();
 		Matrix test2 = Matrix(3, 3);
@@ -159,13 +175,13 @@ namespace P3dot2 {
 		Matrix sum = test1 + test2;
 
 		sum.display();
-		
+
 		std::cout << std::endl;
-		
+
 		Matrix product = test1 * test2;
 
 		product.display();
-		
+
 		std::cout << std::endl;
 	}
 }

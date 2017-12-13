@@ -27,8 +27,10 @@ namespace P4dot1 {
 
 	const int n = 800;
 
+	double *prefixAverages1AttemptTwo(int *X, int n);
 	int* prefixAverages1(int X[n]);
 
+	double *prefixAverages2AttemptTwo(int *X, int n);
 	int* prefixAverages2(int X[n]);
 
 	void run();

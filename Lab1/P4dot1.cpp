@@ -7,6 +7,27 @@
 #include "P4dot1.h"
 
 namespace P4dot1 {
+	double *prefixAverages1AttemptTwo(int *X, int n)
+	{
+		int a;
+		
+		double *A = new double[n];
+		
+		for (int i = 0; i < n; i++)
+		{
+			a = 0;
+
+			for (int j = 0; j < i; j++)
+			{
+				a = a + X[j];
+			}
+			
+			A[i] = a / (i + 1);
+		}
+		
+		return A;
+	}
+
 	int* prefixAverages1(int X[n])
 	{
 		int A[n];
@@ -19,6 +40,22 @@ namespace P4dot1 {
 				a = a + X[j];
 			}
 			A[i] = a / (i + 1);
+		}
+
+		return A;
+	}
+
+	double *prefixAverages2AttemptTwo(int *X, int n)
+	{
+		int s = 0;
+		
+		double *A = new double[n];
+		
+		for (int i = 0; i < n; i++)
+		{
+			s = s + X[i];
+
+			A[i] = s / (i + 1);
 		}
 
 		return A;
@@ -63,9 +100,11 @@ namespace P4dot1 {
 		{
 			start = std::chrono::high_resolution_clock::now();
 
-			int *p;
+			//int *p;
 
-			p = prefixAverages1(X);
+			//p = prefixAverages1(X);
+
+			double *p = prefixAverages1AttemptTwo(X, n);
 
 			//std::cout << "\tRun #" << i+1 << "..." << std::endl;
 
@@ -75,6 +114,8 @@ namespace P4dot1 {
 			measurements.push_back(elapsed.count());
 			
 			totalTime1 += measurements[i];
+
+			delete[] p;
 		}
 
 		std::cout << "\t That took " << totalTime1 << std::endl;
@@ -87,9 +128,11 @@ namespace P4dot1 {
 		{
 			start = std::chrono::high_resolution_clock::now();
 
-			int *p2;
+			//int *p2;
 
-			p2 = prefixAverages2(X);
+			//p2 = prefixAverages2(X);
+
+			double *p = prefixAverages2AttemptTwo(X, n);
 
 			//std::cout << "\tRun #" << i+1 << "..." << std::endl;
 
@@ -99,6 +142,8 @@ namespace P4dot1 {
 			measurements2.push_back(elapsed.count());
 
 			totalTime2 += measurements2[i];
+			
+			delete[] p;
 		}
 
 		std::cout << "\t That took " << totalTime2 << std::endl;

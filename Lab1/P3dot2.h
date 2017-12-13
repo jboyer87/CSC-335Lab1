@@ -10,15 +10,16 @@ namespace P3dot2 {
 		Matrix();
 		Matrix(int columns, int rows);
 		virtual ~Matrix();
+		Matrix(const Matrix &right);
 		Matrix operator+(const Matrix &matrix);
 		Matrix operator*(const Matrix &matrix);
 
 		void load();
 
-		void display();
+		void const display();
 
 	private:
-		int** m_data = nullptr;
+		int** m_data;
 		int m_columns = 0;
 		int m_rows = 0;
 		void initializeMatrixData();
